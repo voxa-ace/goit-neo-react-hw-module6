@@ -4,7 +4,9 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  margin: 0 auto;
   margin-bottom: 8px;
+  margin-top: 20px;
   width: 300px;
   box-sizing: border-box; 
 }
@@ -36,8 +38,6 @@
   align-items: center; 
   justify-content: center;
 }
-
-
 
 .deleteButton:hover {
   background-color: #c82333;

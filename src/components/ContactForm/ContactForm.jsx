@@ -2,8 +2,14 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './ContactForm.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, selectContacts } from '../../redux/contactsSlice';
+import { nanoid } from 'nanoid';
 
-const ContactForm = ({ onAddContact }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('Name is required')
@@ -16,15 +22,26 @@ const ContactForm = ({ onAddContact }) => {
       .max(50, 'Number is too long'),
   });
 
+  const handleSubmit = (values, { resetForm }) => {
+    const newContact = { id: nanoid(), ...values };
+    const isDuplicate = contacts.some(contact => 
+      contact.name.toLowerCase() === values.name.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      alert('Contact with this name already exists!');
+    } else {
+      dispatch(addContact(newContact));
+      resetForm();
+    }
+  };
+
   return (
     <div className={styles.formContainer}>
       <Formik
         initialValues={{ name: '', number: '' }}
         validationSchema={validationSchema}
-        onSubmit={(values, { resetForm }) => {
-          onAddContact(values);
-          resetForm();
-        }}
+        onSubmit={handleSubmit}
       >
         {() => (
           <Form>
